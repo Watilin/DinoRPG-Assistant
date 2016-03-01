@@ -23,11 +23,11 @@
 .mini-level { position: absolute;
               left: -1.667em;
               top: 1ex;
-              font-size: smaller;
+              font-size: 10px;
               color: #FFC;
               text-shadow: 0 1px 0 black;
               background: #D31;
-              border: solid thin #FFC;
+              border: solid thin #FFC;
               box-shadow:
                 0 0 1px 0px #411,
                 inset 0 0 2px 0px black;
