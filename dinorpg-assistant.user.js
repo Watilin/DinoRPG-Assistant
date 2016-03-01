@@ -1,18 +1,30 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        DinoRPG Assistant
 // @namespace   fr.kergoz-panic.watilin
-// @description Diverses petites améliorations pour le jeu DinoRPG.
 // @version     1.0.0
+// @description Diverses petites améliorations pour le jeu DinoRPG.
+// @author      Watilin
+// @licence     GNU/GPL 2.0
+//
 // @include     http://www.dinorpg.com/*
+//
 // @downloadURL https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/dinorpg-assistant.user.js
 // @updateURL   https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/dinorpg-assistant.meta.js
+// @supportURL  https://github.com/Watilin/DinoRPG-Assistant/issues
+//
+// @noframes
 // @run-at      document-start
+// @nocompat    Chrome
+//
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_listValues
 // @grant       GM_deleteValue
+// @grant       GM_info
 // @grant       GM_getResourceText
 // @grant       GM_getResourceURL
+//
+// @icon        icon-rocky.png
 // @resource    style                   style.css
 // @resource    up-locked-small         small_lup_locked.png
 // @resource    up-locked-large         act_levelup_locked.png
@@ -21,7 +33,9 @@
 "use strict";
 
 /* Table of Contents: use Ctrl+F, put a leading @
+  [SHI] Shims for Retarded Browsers
   [CST] Constants
+  [BRO] Browser Detection 
   [DBG] Debug
   [TIM] Timers
   [LVL] Levels
@@ -30,18 +44,56 @@
   [INI] Initialization
 */
 
+// [@SHI] Shims for Retarded Browsers //////////////////////////////////
+
+[ "slice", "forEach", "map", "filter", "some", "every", "reduce" ]
+  .forEach(function (methodName) {
+    if (!(methodName in Array)) {
+      Array[methodName] = function (iterable, callback, context) {
+        return Array.prototype[methodName]
+          .call(iterable, callback, context);
+      };
+    }
+  });
+
+if (!("contains" in String.prototype)) {
+  String.prototype.contains = function contains(sub) {
+    return this.indexOf(sub) >= 0;
+  };
+}
+
 // [@CST] Constants ////////////////////////////////////////////////////
 
 const STYLE_RESOURCE_NAME = "style";
 const DINO_RX = /\/dino\/(\d+)$/;
-const BRIGHTNESS = 180;
+const COLOR_BRIGHTNESS = 180;
+
 const LOCK_TXT = "Verrouiller";
 const UNLOCK_TXT = "Déverrouiller";
+
+const BROWSER_FIREFOX     = Symbol();
+const BROWSER_CHROME      = Symbol();
+const BROWSER_UNSUPPORTED = Symbol();
+
+// [@BRO] Browser Detection ////////////////////////////////////////////
+
+function guessBrowser() {
+  var handler = GM_info.scriptHandler;
+  if (handler && "Tampermonkey" === handler) return BROWSER_CHROME;
+  var ua = navigator.userAgent;
+  if (ua) {
+    if (ua.contains("Firefox")) return BROWSER_FIREFOX;
+    if (ua.contains("Chrome")) return BROWSER_CHROME;
+  }
+  return BROWSER_UNSUPPORTED;
+}
 
 // [@DBG] Debug ////////////////////////////////////////////////////////
 
 console.groupCollapsed("DinoRPG Assistant stored values:");
-for (let key of GM_listValues()) console.log(key, GM_getValue(key));
+Array.forEach(GM_listValues(), function (key) {
+  console.log(key, GM_getValue(key));
+});
 console.groupEnd();
 
 // [@TIM] Timers ///////////////////////////////////////////////////////
@@ -65,8 +117,7 @@ function retrieveTimerInfo($timer, dinoId) {
 
 function injectTimers($list) {
   var timers = [];
-
-  for (let $a of $list.querySelectorAll("a")) {
+  Array.forEach($list.querySelectorAll("a"), function ($a) {
     let id = $a.href.match(DINO_RX)[1];
     let time = GM_getValue(id, {}).time;
     if (time) {
@@ -76,12 +127,12 @@ function injectTimers($list) {
       $a.appendChild($span);
       timers.push($span);
     }
-  }
+  });
 
   setInterval(function () {
     try {
       var seconds = Math.floor(Date.now() / 1000);
-      for (let $t of timers) {
+      timers.forEach(function ($t) {
         if (seconds <= $t.dataset.targetTime) {
           updateTimer($t, seconds);
         } else {
@@ -89,7 +140,7 @@ function injectTimers($list) {
           delete $t.dataset.targetTime;
           timers.splice(timers.indexOf($t), 1);
         }
-      }
+      });
     } catch (e) {
       console.error(e);
     }
@@ -157,7 +208,7 @@ function colorCurve(x) {
 }
 
 function injectLevels($list) {
-  for (let $a of $list.querySelectorAll("a")) {
+  Array.forEach($list.querySelectorAll("a"), function ($a) {
     let id = $a.href.match(DINO_RX)[1];
     let level = GM_getValue(id, {}).level;
     if (level) {
@@ -167,16 +218,16 @@ function injectLevels($list) {
 
       /*
       let value = 6 * (level - 1) / 70;
-      let   redByte = Math.round(colorCurve(value + 2) * BRIGHTNESS);
-      let greenByte = Math.round(colorCurve(value    ) * BRIGHTNESS);
-      let  blueByte = Math.round(colorCurve(value + 4) * BRIGHTNESS);
+      let   red = Math.round(colorCurve(value + 2) * COLOR_BRIGHTNESS);
+      let green = Math.round(colorCurve(value    ) * COLOR_BRIGHTNESS);
+      let  blue = Math.round(colorCurve(value + 4) * COLOR_BRIGHTNESS);
       $span.style.backgroundColor =
-      "rgb(" + redByte + "," + greenByte + "," + blueByte + ")";
+      "rgb(" + red + "," + green + "," + blue + ")";
       */
 
       $a.appendChild($span);
     }
-  }
+  });
 }
 
 // [@LOC] Lock /////////////////////////////////////////////////////////
@@ -213,7 +264,7 @@ function injectLockButton($actionsPanel, dinoId) {
 }
 
 function replaceAllLevelUpImages($list) {
-  for (let $a of $list.querySelectorAll("a")) {
+  Array.forEach($list.querySelectorAll("a"), function ($a) {
     let id = $a.href.match(DINO_RX)[1];
     if (GM_getValue(id, {}).isLocked) {
       $a.dataset.lockedDino = true;
@@ -223,7 +274,7 @@ function replaceAllLevelUpImages($list) {
         $lup.src = GM_getResourceURL("up-locked-small");
       }
     }
-  }
+  });
 }
 function replaceLevelUpImage($img) {
   if (!$img) return;
@@ -275,23 +326,29 @@ function restoreLevelUpButton($button) {
 // [@STY] Style ////////////////////////////////////////////////////////
 
 function injectStyle($head) {
-  var $link = document.createElement("link");
-  $link.rel = "stylesheet";
-  $link.href = GM_getResourceURL(STYLE_RESOURCE_NAME);
-  $head.appendChild($link);
+  if (BROWSER_FIREFOX === guessBrowser()) {
+    let $link = document.createElement("link");
+    $link.rel = "stylesheet";
+    $link.href = GM_getResourceURL(STYLE_RESOURCE_NAME);
+    $head.appendChild($link);
+  } else {
+    let $style = document.createElement("style");
+    $style.textContent = GM_getResourceText(STYLE_RESOURCE_NAME);
+    $head.appendChild($style);
+  }
 }
 
 if (document.head) injectStyle(document.head);
 else new MutationObserver(function (batch) {
-  for (let mutation of batch) {
-    for (let $node of mutation.addedNodes) {
+  batch.forEach(function (mutation) {
+    Array.forEach(mutation.addedNodes, function ($node) {
       if ("head" === $node.nodeName.toLowerCase()) {
         this.disconnect();
         injectStyle($node);
         return;
       }
-    }
-  }
+    });
+  });
 }).observe(document.documentElement, { childList: true });
 
 // [@INI] Initialization ///////////////////////////////////////////////
@@ -322,4 +379,3 @@ document.addEventListener("DOMContentLoaded", function () {
     replaceAllLevelUpImages($dinozList);
   }
 });
-
