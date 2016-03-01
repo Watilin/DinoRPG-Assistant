@@ -10,4 +10,4 @@ Version 1.1.0 “Régis” – 1 mars 2016
 
   * Compatibilité avec Chrome
   * Ajout d'une icône en formats 32×32 et 64×64
-  * (TODO) Verrouillage de niveau actif à partir du niveau 10
+  * Verrouillage de niveau actif à partir du niveau 10
