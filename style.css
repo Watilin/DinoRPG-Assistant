@@ -23,7 +23,7 @@
 .mini-level { position: absolute;
               left: -1.667em;
               top: 1ex;
-              font-size: smaller;
+              font-size: 10px;
               color: #FFC;
               text-shadow: 0 1px 0 black;
               background: #D31;

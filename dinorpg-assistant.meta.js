@@ -8,8 +8,8 @@
 //
 // @include     http://www.dinorpg.com/*
 //
-// @icon        icon-rocky.png
-// @icon64      icon-rocky.png
+// @icon        https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/icon-rocky.png
+// @icon64      https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/icon-rocky64.png
 // @downloadURL https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/dinorpg-assistant.user.js
 // @updateURL   https://raw.githubusercontent.com/Watilin/DinoRPG-Assistant/master/dinorpg-assistant.meta.js
 // @supportURL  https://github.com/Watilin/DinoRPG-Assistant/issues
