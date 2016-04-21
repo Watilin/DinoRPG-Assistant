@@ -14,7 +14,7 @@ Il vous faut un gestionnaire d'userscripts. C'est une extension de navigateur. L
 * Tampermonkey pour Chrome/Chromium (testé)
 * NinjaKit pour Safari (**non** testé)
 
-*Nota Bene:* habituellement, mon cycle de test est le suivant : je développe sous Firefox/Greasemonkey, puis teste sous Chrome/Tampermonkey, toutes versions à jour. Je fais mon possible pour éviter de laisser des bugs sous Chrome, mais il arrivent que certains passent entre les mailles du filet. Quant aux autres navigateurs, je ne peux pas y garantir la compatibilité de mon script,
+*Nota Bene:* habituellement, mon cycle de test est le suivant : je développe sous Firefox/Greasemonkey, puis teste sous Chrome/Tampermonkey, toutes versions à jour. Je fais mon possible pour éviter de laisser des bugs sous Chrome, mais il arrive que certains passent entre les mailles du filet. Quant aux autres navigateurs, je ne peux pas y garantir la compatibilité de mon script,
 
 Une fois votre gestionnaire d'userscripts installé, cliquez simplement sur le lien du script : [dinorpg-assistant.user.js](https://github.com/Watilin/DinoRPG-Assistant/raw/master/dinorpg-assistant.user.js). Votre gestionnaire vous demandera l'autorisation d'installer le script. L'installation est automatique.
 
