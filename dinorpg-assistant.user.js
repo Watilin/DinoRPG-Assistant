@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        DinoRPG Assistant
 // @namespace   fr.kergoz-panic.watilin
-// @version     1.1.0
+// @version     1.1.1
 // @description Diverses petites améliorations pour le jeu DinoRPG.
 // @author      Watilin
 // @licence     GNU/GPL 2.0
@@ -234,10 +234,13 @@ function injectLevels($list) {
 // [@LOC] Lock /////////////////////////////////////////////////////////
 
 function injectLockButton($actionsPanel, dinoId) {
+  var info = GM_getValue(dinoId, {});
+  if (!(info && info.level && info.level > 10)) return;
+
   var $button = document.createElement("a");
   $button.href = "#";
   $button.classList.add("button", "lock-button");
-  $button.textContent = GM_getValue(dinoId, {}).isLocked ?
+  $button.textContent = info.isLocked ?
     UNLOCK_TXT : LOCK_TXT;
 
   $button.addEventListener("click", function (event) {
