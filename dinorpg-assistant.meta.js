@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        DinoRPG Assistant
 // @namespace   fr.kergoz-panic.watilin
-// @version     1.1.0
+// @version     1.1.1
 // @description Diverses petites améliorations pour le jeu DinoRPG.
 // @author      Watilin
 // @licence     GNU/GPL 2.0
