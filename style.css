@@ -1,0 +1,42 @@
+#dinozList a { position: relative; }
+
+/* --- timer -------------------------------------------------------- */
+
+.mini-timer { position: absolute;
+              right: 0;
+              bottom: 0;
+              font-size: 10px;
+              color: white;
+              padding: 0 2px;
+              border-radius: 2px;
+            }
+.mini-timer:empty { display: none; }
+
+.mini-timer.more-than-12-hours { background: #D65656; }
+.mini-timer.more-than-4-hours  { background: #B07030; }
+.mini-timer.more-than-1-hour   { background: #8A8A0A; }
+.mini-timer.more-than-15-min   { background: #30B030; }
+.mini-timer /* < 15 min */     { background: #6E6EEE; }
+
+/* --- level -------------------------------------------------------- */
+
+.mini-level { position: absolute;
+              left: -1.667em;
+              top: 1ex;
+              font-size: smaller;
+              color: #FFC;
+              text-shadow: 0 1px 0 black;
+              background: #D31;
+              border: solid thin #FFC;
+              box-shadow:
+                0 0 1px 0px #411,
+                inset 0 0 2px 0px black;
+              width: 3ex;
+              height: 3ex;
+              line-height: 3ex;
+              border-radius: 3ex;
+              text-align: center;
+            }
+#act_levelup .locked td { text-decoration: line-through;
+                          cursor: not-allowed;
+                        }
